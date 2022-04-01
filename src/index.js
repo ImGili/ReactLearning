@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
 function component()
 {
@@ -11,15 +11,34 @@ function component()
 
 document.body.appendChild(component());
 
-class HelloMessage extends React.Component {
+class Timer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { seconds: 0 };
+  }
+
+  tick() {
+    this.setState(state => ({
+      seconds: state.seconds + 1
+    }));
+  }
+
+  componentDidMount() {
+    this.interval = setInterval(() => this.tick(), 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
   render() {
-    return React.createElement(
-      "div",
-      null,
-      "Hello ",
-      this.props.name
+    return (
+      <div>
+        Seconds: {this.state.seconds}
+      </div>
     );
   }
 }
-
-ReactDOM.render(React.createElement(HelloMessage, { name: "Taylor" }), document.getElementById('hello-example'));
+const container = document.getElementById('hello-example');
+const root = createRoot(container);
+root.render(<Timer />);
